@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import requests , json , time
+import argparse
+import os
 
 # login
 log_req = requests.post(
@@ -67,31 +69,63 @@ def run_video(video):
     print("Done")
     return get_result(img_json.json()['job_id'])
 
+class VideoProcessor:
 
-def count(video):
-    images =  []
-    cap = cv2.VideoCapture(video)
-    cnt = 0
-    if (cap.isOpened()== False):
-        print("Error opening video stream or file")
-    while(cap.isOpened()):
-        ret, frame = cap.read()
-        if not(ret) : break
-        images.append(frame)
-    cap.release()
-    return images
+    def __init__(self, input_video, output_video=None, width=0, height=0):
+        self.input_video = input_video
+        self.width = width
+        self.height = height
+        if not output_video:
+            name, ext = os.path.splitext(input_video)
+            self.output_video = '{i}_compressed{e}'.format(i=name, e=ext)
+        else:
+            self.output_video = output_video
 
+    def read_video(self):
+        images = []
+        cap = cv2.VideoCapture(self.input_video)
+        if not self.width:
+            self.width = int(cap.get(3))
 
-def demo(video_path, frames):
-    imgs = count(video_path)
-    out = cv2.VideoWriter('demo.mp4',
-        cv2.VideoWriter_fourcc(*'DIVX'), 15, (426,240))
-    for (img, frame) in zip(imgs , frames):
-        if(len(frame['persons']) > 0):
-            out.write(img)
-    out.release()
+        if not self.height:
+            self.height = int(cap.get(4))
+        if (cap.isOpened()== False):
+            print("Error opening video stream or file")
+        while(cap.isOpened()):
+            ret, frame = cap.read()
+            if not(ret) : break
+            images.append(frame)
+        cap.release()
+        return images
 
+    def write_video(self, frames):
+        imgs = self.read_video()
+        out = cv2.VideoWriter(self.output_video,
+            cv2.VideoWriter_fourcc(*'DIVX'), 15, (self.width, self.height))
 
-if __name__ == "__main__":
-    annoation = run_video("./sample_video_test.mp4")
-    demo("./sample_video_test.mp4",annoation.json()['frames'])
+        for (img, frame) in zip(imgs , frames):
+            if(len(frame['persons']) > 0):
+                out.write(img)
+        out.release()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Python program to compress surveillance videos.')
+    parser.add_argument('input',
+                        help='path to input video file',
+                        )
+    parser.add_argument('--output',
+                        help='path to output video file',
+                        )
+
+    parser.add_argument('--resolution',
+                        help='resolution in output')
+    args = parser.parse_args()
+    if args.resolution:
+        w, h = args.resolution.split('x')
+    else:
+        w, h =None, None
+
+    vp = VideoProcessor(args.input, args.output, w, h)
+
+    annoation = run_video(args.input)
+    vp.write_video(annoation.json()['frames'])
