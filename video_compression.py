@@ -60,7 +60,38 @@ def run(img_path):
     print("Done")
     return annoation_result , json_result
 
+def run_video(video):
+    img_json = request_wrnchAI(video,'json')
+    print("Waiting for output ...", "\r")
+    time.sleep(10)
+    print("Done")
+    return get_result(img_json.json()['job_id'])
+
+
+def count(video):
+    images =  []
+    cap = cv2.VideoCapture(video)
+    cnt = 0
+    if (cap.isOpened()== False):
+        print("Error opening video stream or file")
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if not(ret) : break
+        images.append(frame)
+    cap.release()
+    return images
+
+
+def demo(video_path, frames):
+    imgs = count(video_path)
+    out = cv2.VideoWriter('demo.mp4',
+        cv2.VideoWriter_fourcc(*'DIVX'), 15, (426,240))
+    for (img, frame) in zip(imgs , frames):
+        if(len(frame['persons']) > 0):
+            out.write(img)
+    out.release()
+
+
 if __name__ == "__main__":
-    ann , json = run("./10.png")
-    show_img(decode_img(ann.content))
-    print(json.json)
+    annoation = run_video("./sample_video_test.mp4")
+    demo("./sample_video_test.mp4",annoation.json()['frames'])
