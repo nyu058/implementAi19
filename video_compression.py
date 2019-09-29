@@ -58,8 +58,8 @@ def run(img_path):
     img_json = request_wrnchAI(img_path , "json")
     print("Waiting for output ...", "\r")
     time.sleep(4)
-    annoation_result , json_result = get_result(img_annotation.json()['job_id']) \
-        , get_result(img_json.json()['job_id'])
+    annoation_result , json_result = get_result(\
+        img_annotation.json()['job_id']) , get_result(img_json.json()['job_id'])
     print("Done")
     return annoation_result , json_result
 
@@ -73,7 +73,8 @@ def run_video(video):
 
 class VideoProcessor:
 
-    def __init__(self, input_video, output_video=None, width=0, height=0, count=False):
+    def __init__(self, input_video, output_video=None,\
+                                                 width=0, height=0, count=False):
         self.input_video = input_video
         self.width = width
         self.height = height
@@ -121,11 +122,13 @@ class VideoProcessor:
             persons = frame.get('persons', [])
             if(len(persons) > 0):
                 out.write(img)
-        print('There are {} people in the video'.format(self.count_people(frames)))
+        print('There are {} people in the video'.\
+                                            format(self.count_people(frames)))
         out.release()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Python program to compress surveillance videos.')
+    parser = argparse.ArgumentParser(description='Python program to compress ' 
+                                                        'surveillance videos.')
     parser.add_argument('input',
                         help='path to input video file',
                         )
@@ -133,7 +136,8 @@ if __name__ == '__main__':
                         help='path to output video file',
                         )
     parser.add_argument('--count',
-                        help='Count how many people are in the video and print the result',
+                        help='Count how many people are in the video'
+                            ' and print the result',
                         action='store_true')
     parser.add_argument('--resolution',
                         help='resolution in output')
