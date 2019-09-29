@@ -1,5 +1,5 @@
 # Welcome to our project for implementAi19!!
-# YouCompress :collision::collision::collision:
+# :collision::collision: YouCompress :collision::collision:
 
 A program that will reduce the memory and time by extracting the relevant data from the footage provided to the program
 
