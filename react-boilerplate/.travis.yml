@@ -1,0 +1,21 @@
+dist: xenial
+language: node_js
+node_js:
+  - lts/*
+  - node
+cache:
+  directories:
+  - node_modules
+install:
+  - npm install
+script:
+  - npm run lint
+  - npm run test
+  - npm run build
+deploy:
+  provider: heroku
+  app: the-react-boilerplate
+  api_key:
+    secure: wh+dCRLeYfSy/uE4Fj0Erg8zKZf1E8eGzEaVRk4PR5ULoZmL6e+3y0vz4k5FkjBqvUjlDQgt/04/lohbr1hInvH+nQABp6xfH86kpVnm+aeuCSSfx+90rtieXoMY69xaHNcFLRdW63hpaaRs64Gv9Fd6fvfJAMFiVmqMBSYgbk5cm+ELeffw4yBfBud+EnTvuGOwkC4cwIK9bDp754xXUdb4c3ioSyys6cxeMrFvKZm2RRcEBPtHK7Q6NDzY7FqyTzV0t8lT3aV0IRcgHQEqsnQJs7Lt0pLga05tJENnY2ZDxYsXJqRKvECUja34SvIH6cetNssC00ppLNdKg1ekycvBcia7lcw2Dp5aEiigi39G4GXdNaEYksXnObFPLa59hEOLJnj1nMk7VUzzu68iBFJs8L05dUcG0LhYyLziEv207+osPSpmGmZ/pj80f3D/waTG9RssS7YBht3tIwnWWpCU+nI/VRiODtpaaOoBGV5aWzlrL5EdkHOJ5MjCtRcmHD5u8skg6GxsRkI7VGo8eAXS4XNZqorw1PZWwAnBGLzuLYDZ7jEoUOshAZmadSdlZYMPsX1bRqhc7uclwGL5ENlgjPKwljmAYB7M8Fjdq5nSJQe85+MtA2VHMmiLv7L+0JEVsDnZ61hJBTeAD0zokDHxigLylDb+0cvM2HQ/VeM=
+  on:
+    repo: theGirrafish/react-boilerplate
