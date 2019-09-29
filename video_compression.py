@@ -118,6 +118,8 @@ class VideoProcessor:
         out = cv2.VideoWriter(self.output_video,
             cv2.VideoWriter_fourcc(*'DIVX'), 15, (self.width, self.height))
 
+        max_interval = self.get_time(args.input, 10)
+
         for (img, frame) in zip(imgs , frames):
             persons = frame.get('persons', [])
             if(len(persons) > 0):
@@ -125,6 +127,20 @@ class VideoProcessor:
         print('There are {} people in the video'.\
                                             format(self.count_people(frames)))
         out.release()
+
+    def get_time(self, path_video, interval):
+        req = run_video(video)
+
+        tot_frames = len(json.loads(req.content)['frames'])
+        video = cv2.VideoCapture(path_video)
+        fps = video.get(cv2.cv.CV_CAP_PROP_FPS)
+
+        ret_interval = (tot_frames//fps)*(60*interval)
+        # release vid
+        video.release()
+        return ret_interval # return the number of frames
+        
+        
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Python program to compress ' 
