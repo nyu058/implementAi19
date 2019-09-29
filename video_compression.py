@@ -173,15 +173,24 @@ if __name__ == '__main__':
                         action='store_true')
     parser.add_argument('--resolution',
                         help='resolution in output')
+    parser.add_argument('--js_jobid',
+                        help='Pre built json wrnch job for reading')
+    parser.add_argument('--ann_jobid',
+                        help='Pre built json wrnch job for reading')
     args = parser.parse_args()
+
     if args.resolution:
         w, h = args.resolution.split('x')
     else:
         w, h = None, None
+    js_jobid , ann_jobid =None , None
+    if args.js_jobid: js_jobid = args.js_jobid
+    if args.ann_jobid: ann_jobid = args.ann_jobid
+
 
     vp = VideoProcessor(args.input, args.output, w, h, args.count ,
-        json_job_id='c865f397-3632-4ece-b820-4069dc3bf8ea')
-
+        json_job_id=js_jobid, annotated_job_id =ann_jobid)
+    vp.write_video(vp.json_content['frames'])
     # annotation = run_video(args.input)
 
     # vp.write_video(annotation.json()['frames'])
