@@ -129,7 +129,7 @@ class VideoProcessor:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Python program to compress ' 
                                                         'surveillance videos.')
-    parser.add_argument('input',
+    parser.add_argument('--input',
                         help='path to input video file',
                         )
     parser.add_argument('--output',
