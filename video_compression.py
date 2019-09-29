@@ -119,6 +119,7 @@ class VideoProcessor:
             cv2.VideoWriter_fourcc(*'DIVX'), 15, (self.width, self.height))
 
         max_interval = self.get_time(args.input, 10)
+        print(max_interval)
 
         for (img, frame) in zip(imgs , frames):
             persons = frame.get('persons', [])
@@ -165,6 +166,6 @@ if __name__ == '__main__':
 
     vp = VideoProcessor(args.input, args.output, w, h, args.count)
 
-    annoation = run_video(args.input)
+    annotation = run_video(args.input)
     vp.write_video(annoation.json()['frames'])
 
