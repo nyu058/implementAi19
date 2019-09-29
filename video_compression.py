@@ -22,13 +22,14 @@ def get_result(jobid , access_token = access_token):
 
 
 def request_wrnchAI(img_path = '10.png',key="annotated_media"):
-    header = "Bearer {}".format(access_token)
+    # header = "Bearer {}".format(access_token)
     files = {'media': open( img_path,'rb')}
     test_annotated = requests.post(
         "https://api.wrnch.ai/v1/jobs",
         data={
-            "work_type":key,
-            "heads":True},
+            "work_type": key,
+            "heads": True,
+            "tracking": True},
         files=files,
         headers={"Authorization": "Bearer {}".format(access_token)}
         )
@@ -69,12 +70,14 @@ def run_video(video):
     print("Done")
     return get_result(img_json.json()['job_id'])
 
+
 class VideoProcessor:
 
-    def __init__(self, input_video, output_video=None, width=0, height=0):
+    def __init__(self, input_video, output_video=None, width=0, height=0, count=False):
         self.input_video = input_video
         self.width = width
         self.height = height
+        self.count = count
         if not output_video:
             name, ext = os.path.splitext(input_video)
             self.output_video = '{i}_compressed{e}'.format(i=name, e=ext)
@@ -93,10 +96,21 @@ class VideoProcessor:
             print("Error opening video stream or file")
         while(cap.isOpened()):
             ret, frame = cap.read()
-            if not(ret) : break
+            if not ret: break
             images.append(frame)
         cap.release()
         return images
+
+    def count_people(self, frames):
+        persons_id = set()
+        for frame in frames:
+            persons = frame.get('persons', [])
+
+            for person in persons:
+                persons_id.add(person['id'])
+
+        return len(persons_id)
+
 
     def write_video(self, frames):
         imgs = self.read_video()
@@ -104,8 +118,10 @@ class VideoProcessor:
             cv2.VideoWriter_fourcc(*'DIVX'), 15, (self.width, self.height))
 
         for (img, frame) in zip(imgs , frames):
-            if(len(frame['persons']) > 0):
+            persons = frame.get('persons', [])
+            if(len(persons) > 0):
                 out.write(img)
+        print('There are {} people in the video'.format(self.count_people(frames)))
         out.release()
 
 if __name__ == '__main__':
@@ -116,16 +132,19 @@ if __name__ == '__main__':
     parser.add_argument('--output',
                         help='path to output video file',
                         )
-
+    parser.add_argument('--count',
+                        help='Count how many people are in the video and print the result',
+                        action='store_true')
     parser.add_argument('--resolution',
                         help='resolution in output')
     args = parser.parse_args()
     if args.resolution:
         w, h = args.resolution.split('x')
     else:
-        w, h =None, None
+        w, h = None, None
 
-    vp = VideoProcessor(args.input, args.output, w, h)
+    vp = VideoProcessor(args.input, args.output, w, h, args.count)
 
     annoation = run_video(args.input)
     vp.write_video(annoation.json()['frames'])
+
