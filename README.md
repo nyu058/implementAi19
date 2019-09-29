@@ -48,4 +48,4 @@ https://github.com/nyu058/implementAi19/blob/master/slow.mov
 
 ## Acknowledgments
 
-* :weary: Hackathons are the epitome of hairloss :weary:
+* Hackathons are the epitome of hairloss :weary:
