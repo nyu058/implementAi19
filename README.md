@@ -39,7 +39,7 @@ https://github.com/nyu058/implementAi19/blob/master/slow.mov
 * [wrnch](https://devportal.wrnch.ai/wrnchcloud/api_docs#introduction) - Human detector API
 * [openCV](https://opencv.org/) - Video manipulation library
 
-## Build with :heart: by
+## Build by
 
 * **Parsa Yadollahi** - [Parsa](https://github.com/ParsaYadollahi)
 * **Nathan Yu** - [Nathan](http://github.com/nyu058/)
@@ -48,4 +48,4 @@ https://github.com/nyu058/implementAi19/blob/master/slow.mov
 
 ## Acknowledgments
 
-* Hackathons are the epitome of hairloss :weary:
+* Hackathons => epitome of hairloss
